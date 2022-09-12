@@ -1,0 +1,36 @@
+Student in foreign university -> some issue in kernel release. 
+npm packages issues. 
+
+
+azure lts ubuntu fail 
+
+WAL command
+wall [options] [message-text/filename] 
+
+https://meet.ilugc.in/
+ 
+ 
+ new ubuntu release. 
+ 
+ semantic version, beta version
+ 
+ rc
+ 
+ 
+ Parameshwar Arunachalam
+Parameshwar Arunachalam says:
+https://kernel.org/
+ 
+ 
+ https://semver.org/
+ 
+ 
+ 
+ Does the major version number (4.x vs 5.x) mean anything?
+No. The major version number is incremented when the number after the dot starts looking "too big." There is literally no other reason. 
+Parameshwar Arunachalam says:
+https://kernel.org/category/releases.html
+
+phishing, clikjacking
+
+

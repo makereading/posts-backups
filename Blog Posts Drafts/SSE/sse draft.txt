@@ -1,0 +1,453 @@
+There are two general approaches for data delivery from servers to client. Suppose we are dealing with web application, in which our web browser is the client.
+Suppose we are dealing with a web application, in which our web browser is the client. When the browser asks data from the server, it's called Client Pull; similarly, when the server keeps on pushing updates to the browser, its called server push. 
+
+
+Server sent events is a server push techology that aims to establish a long persistent connection between the client and the server. It enables a server to automatically send updates to a client via an HTTP connection without making an initial request. They open a single directional channel between client and server for data delivery. Server sent events relu on javascript API named EventSource for continously updating the client. They are designed to enhance the native crossbrowser streaming by establishing a unidirectional connection to send updates and continous data streams to the client. 
+
+Before getting into Server-Sent Events’ working details, let’s understand the basic understanding of how communication happens over the internet by focusing on HTTP requests. HTTP is used as the most common way for data transfer in client-server based architecture to deal with this issue, right!
+
+To mitigate this, the Client tries to reconnect to an event source by sending the ID of the last event as HTTP header “Last-Event-ID” to the Server via a new HTTP request. The Server listens to this and again start sending events that have happened since the supplied ID.
+
+Let’s look into the internal architecture of Server-Sent Events.
+
+Server-Sent Events are real-time events that are emitted by the Server and received by the browser. In Server-Sent Events, the Client initiates the communications between Client and Server by creating a new JavaScript EventSource object. It passes the endpoint’s URL, which is expected to return a stream of events. The EventSource interface connects to a server over HTTP and receives events from the Server in event-stream or text format.
+
+The Client sends a regular HTTP request to the Server and expects a series of event messages from the Server. Whenever the Server writes an event to the HTTP response, the Client receives it and processes it in a listener callback function. The HTTP response connection remains open until it can be considered stale or until the Client closes it. 
+
+The messages/events transmitted in Server-Sent Events are formatted according to the Server-Sent Events standard. Each event consists of key/value pairs separated by a set of the colon, with each pair terminated by a newline, while two newlines terminate the events.
+
+
+Let’s look at how Client and Server are implemented in SSE
+
+Client-Side Implementation
+
+As explained earlier, the Client creates a new EventSource object for receiving the events from the Server. EventSource takes a URL from where the events have to be drawn as “text/event-stream.”
+
+The Client receives the events and processes them in a listener callback function. Callback functions are event handlers, which are registered to handle events. A method named addEventListener  of the EventSource object is used to register these handlers. Suppose in the original event message, multiple data lines existed. In that case, these all will be concatenated together by the browser to form one string, and then only the callback functions are called. However, there is a limit to the SSE connections that one can have at any instant. Each browser is limited to only six SSE connections.
+
+
+Server-Side Implementation
+
+
+
+As compared to Client Side Implementation, the server-side can be coded in any language like Java, C, Python, Go, etc., while Client-Side has relied on JavaScript.
+The Server received an HTTP request from the Client and responded with valid Server Sent Event messages. The Server instructs the Client about the content type and guides the Client to keep the connection alive so that the events can be easily sent over the same established connection.
+
+The Server can only accept EventSource requests, and at the same time, it needs to maintain a list of all the connected users for emitting new stream events. Server also has to maintain a history of messages so that it would be easy to catch up with the missed messages. Servers should also be able to remove the dropped connections from the connected user’s list.
+
+Stopping an Event Stream
+
+Once the requirement is fulfilled, it is necessary to close the connection and stop the event stream. Depending on the Client and Server, there are two ways to stop an event stream.
+
+Client-Side:
+
+ The Client has the facility to stop the events using the .close() method of the EventSource object. When this method is called, the Server detects this and stops sending events to the Client by closing the corresponding HTTP response.
+ 
+ 
+ 
+ Server Side:
+ 
+  The Server can also stop the event stream by sending a final event with a unique ID which corresponds to the “end of stream” event. Or the Server can also stop the event stream by closing the HTTP response connection with the Client.
+  
+  Hence in this manner, both Client and Server have the authenticity of closing the connection and stop the event streams.
+  
+  Connection Failure
+  
+  In the real world, nothing can be fully persistent. In Server Side Events, the connection is established via HTTP, and the connection may probably get dropped out due to the network inconsistency. This may affect the event transfer and sometimes even results in an incomplete event message. Hence there must be some mechanism to deal with this issue, right!
+  
+  
+  To mitigate this, the Client tries to reconnect to an event source by sending the ID of the last event as HTTP header “Last-Event-ID” to the Server via a new HTTP request. The Server listens to this and again start sending events that have happened since the supplied ID.
+  
+  Applications of Server-Sent Events
+  
+  
+  Server-Sent Events are highly used in building real-time web applications. They are also used in building real-time notification service, which is used in almost all applications to notify users or admins. Tech giants such as Uber also relied on Server-Sent Events for refreshing the trip updates both for driver and customer. An Uber trip is a coordinated movement in the physical environment between participants such as riders and drivers. 
+  
+  
+As the voyage progresses, these two entities must keep up with backend systems and each other.
+
+Consider the following scenario: a rider has requested a ride, and a driver is available to give the service. Uber’s matching technology finds a match in the backend and sends a trip offer to a driver. Everyone (rider, driver, and backend) should now be aware of each other’s intentions. Every few seconds, the driver app can poll the server to see if a new offer is available. Likewise, a rider app can also poll the server every few seconds to see if a driver has been assigned.
+
+Conclusion
+
+Server-Sent Events are beneficial for delivering fast updates. As compared to other alternatives, there is no overhead in its implementation. Server-Sent Events are highly applicable in systems where there is a need for real-time unidirectional data flows. SSEs are highly used in the News Feed of Twitter, Instagram, or Facebook. They are instrumental in updating the stock price chart and in the live sports update system. In this blog, we tried to cover all the aspects of SSE in a more straightforward manner. Hope you all liked it. Please do share your views in the comments below :)
+
+
+They are commonly used to send message updates or continuous data streams to a browser client and designed to enhance native, cross-browser streaming through a JavaScript API called EventSource, through which a client requests a particular URL in order to receive an event stream. The EventSource API is standardized as part of HTML5[1] by the WHATWG. The mime type for SSE is text/event-stream
+
+
+
+ 
+Server sent events(SSE) is a pushing technology that enables pushing notification/message/events from the server to the client(s) via HTTP connection.
+
+While you are developing real-time projects, there is always a one-question mark on “how to send messages/updates from server to client”. We can talk about three different ways to perform server-to-client updates: Client polling, Web Socket, Server-Sent Events (SSE).
+
+Client Polling
+The client sends requests to the server at regular intervals for new updates. Although this technique is not used much nowadays, it can be preferred for some small-medium size projects. It is easy to implement. This technique does not provide a fully-real time system that depends on the request intervals.
+
+In the polling technique, requests are sent and managed by the client side. Requests are sent by the client even if there is no update on the server.
+
+Web Socket
+Websocket is a very popular technology that provides bi-directional data transfer for client and server communication on real-time applications. Websocket is not based on HTTP protocol, so it requires additional installation and integrations to use it. It is difficult to implement compared to other technologies that were mentioned above.
+
+
+
+Server-Sent Events
+SSE is a technology that provides asynchronous communication with event stream from server to the client over HTTP for web applications. The server can send un-directional messages/events to the client and can update the client asynchronously. Almost every browser is supporting the SSE except Internet Explorer :)
+
+Server-sent event (SSE) enables servers to send messages from the server to the client without any polling or long-polling. Let’s take a quick look at the list that SSE can use:
+
+E-commerce Projects (notify whenever the user needs the information)
+Tracking system
+Alarm/Alert Projects
+IoT Projects (Alarm, notify, events, rules, actions)
+Stock Markets (Bitcoin etc.)
+Breaking news, Sports Score Updates
+Delivery projects
+In-app notifications
+
+
+In short, SSE can be used in all web applications where users need real-near time information.
+
+The server-sent events streaming can be started by the client’s GET request to Server.
+
+GET /api/v1/live-scores 
+Accept: text/event-stream
+Cache-Control: no-cache
+Connection: keep-alive
+
+
+Accept: text/event-stream indicates the client waiting for event stream from the server, Cache-Control: no-cache indicates that disabling the caching and Connection: keep-alive indicates the persistent connection. This request will give us an open connection which we are going to use to fetch updates. After the connection, the server can send messages when the events are ready to send by the server. The important thing is that events are text messages in UTF-8 encoding.
+
+id: 1
+event: score
+data: GOAL Liverpool 1 - 1 Arsenal
+data: GOAL Manchester United 3 - 3 Manchester City
+So how to implement this great technology into our projects. Let’s get started with Spring Webflux.
+
+Conclusion:
+
+Server-sent events is a way of reactively sending messages from a server. Server-sent events is the perfect solution for real-time applications. it is lightweight, fast, easy to implement and it provides low latency.
+ 
+
+Introduction
+Event Source is a part of SSE (Server-Sent Events). It pushes data to the browser by providing one-way communication between the server to the browser. Here, communication is carried out from server to browser only and browser doesn’t send any data to the server.
+
+Example of Event Source
+Auto-update of Cricket scores on the website.
+Auto-update of Online stock price update.
+Auto-update of Weather information like temperature, humidity, rain forecast, etc.
+Twitter updating timeline.
+
+
+Event Source or SSE Vs Web-socket
+Event Source
+It is a server sent a communication that is carried out from server to web browser client only. It supports one-way communication.
+It doesn’t support binary. Its uses only UTF-8.
+It has a maximum open connection limit.
+It has built-in support for re-connect and event Id.
+Web-socket
+It provides two-way, a full-duplex communication over a single TCP connection.
+Data can be communicated from server to browser, vice versa. Online chat is the best example.
+It supports arbitrary binary data.
+
+
+Conclusion
+The event source is very good to update or refresh browser data with real-time data. This protocol is very less complicated because it gives flexibility by not adding any external JavaScript library. JavaScript itself provides the EventSource interface to receive the real-time data or message sent by the server.
+
+
+
+
+Server-sent events are, at its core, a long running http connection, a special mime type (text/event-stream) and a user agent that provides the EventSource API. Together, these make the foundation of a unidirectional connection between a server and a client, where messages can be sent from server to client.
+
+
+
+
+
+Eventsource:
+
+
+The EventSource interface is web content's interface to server-sent events.
+
+An EventSource instance opens a persistent connection to an HTTP server, which sends events in text/event-stream format. The connection remains open until closed by calling EventSource.close().
+
+Once the connection is opened, incoming messages from the server are delivered to your code in the form of events. If there is an event field in the incoming message, the triggered event is the same as the event field value. If no event field is present, then a generic message event is fired.
+
+
+
+
+
+We’ve already had a glimpse at Server-Sent Events (also known as EventSource†, and I’ll switch between the two to keep you on your toes) in my Methods of Communication article from last year. In this article, I want to delve in to more detail about the SSE API, demonstrate its features, and even show you how to polyfill browsers that lack EventSource support.
+
+Server-Sent Events are real-time events emitted by the server and received by the browser. They’re similar to WebSockets in that they happen in real time, but they’re very much a one-way communication method from the server.
+
+These events are similar to ordinary JavaScript events that occur in the browser — like click events — except we can control the name of the event and the data associated with it.
+
+All the code for this article is available on github, and a live demo is available online.
+
+† Is it Server-Sent Events or EventSource? Well, they both work. Server-Sent Events is the name of the API and specification. EventSource is the name of the JavaScript object you’re instantiating. It’s a bit like Ajax and XHR, where XHR refers to the XMLHttpRequest object…kinda.
+
+Two notes: a) the uptime for this example is, I’m afraid, usually rather low — good for my server, bad for you. If you test the demo locally it will give you more interesting figures. b) IE6 isn’t supported in any of this article.
+
+Possible Applications #
+A few simple examples of applications that could make use of Server-Sent Events:
+
+A real-time chart of streaming stock prices
+Real-time news coverage of an important event (posting links, tweets, and images)
+A live Twitter wall fed by Twitter’s streaming API
+A monitor for server statistics like uptime, health, and running processes
+We’ll use the server monitor for this article’s examples. If this application were to be used in the wild, we could also check the EventSource‘s connection state to indicate when there’s a potential problem connecting to the server.
+
+Overview of the API #
+The client-side API is rather simple, and it hands-down beats the insane hacks required to get real-time events to the browser back in the bad old days.
+
+The main points of interest:
+
+new EventSource(url) — this creates our EventSource object, which immediately starts listening for events on the given URL.
+readyState — as with XHR, we have a readyState for the EventSource that tells us if we’re connecting (0), open (1), or closed (2).
+onopen, onmessage — two events that we can listen for on the new EventSource object. By default, the message event will fire when new messages are received, unless the server explicitly sets the event type.
+addEventListener — not only can we listen for the default message event, but we can also listen for custom messages using the addEventListener on the EventSource object, just as if we were listening for a click event.
+event.data — as with most messaging APIs, the contents of the message reside in the data property of the event object. This is a string, so if we want to pass around an object, we need to encode and decode it with JSON.
+close — closes the connection from the client side.
+In the future, EventSource will also support CORS using an options argument to the EventSource object: { withCredentials: true }. But at the time of writing, no stable release includes this property.
+
+Simple Example #
+Our simple web app will notify us of server status messages — things like the load average, number of currently connected users, and most CPU-intensive processes. If I were using this application in anger, I’d probably build server modules that emit specific event types when they cross specific thresholds, so that I’m only notified when something gets to warning level.
+
+This snippet of JavaScript connects to our server, listens for messages, and handles the data that comes with the messages:
+
+var source = new EventSource('/stats');
+source.onopen = function () {
+  connectionOpen(true);
+};
+
+source.onerror = function () {
+  connectionOpen(false);
+};
+
+source.addEventListener('connections', updateConnections, false);
+source.addEventListener('requests', updateRequests, false);
+source.addEventListener('uptime', updateUptime, false);
+
+source.onmessage = function (event) {
+  // a message without a type was fired
+};
+Properties of Server-Sent Events #
+Server-Sent Events are more than just a one-way web socket. They have some unique features:
+
+The connection stream is from the server and read-only. This suits lots of applications, some examples of which I listed above.
+They use regular HTTP requests for the persistent connection, not a special protocol, which means we can polyfill using vanilla JavaScript.
+If the connection drops, the EventSource fires an error event and automatically tries to reconnect. The server can also control the timeout before the client tries to reconnect.
+Clients can send a unique ID with messages. When a client tries to reconnect after a dropped connection, it will send the last known ID. Then the server can see that the client missed n messages and send the backlog of missed messages on reconnect.
+Message Format #
+A simple message doesn’t require much:
+
+data: this is a simple message
+<blank line>
+Note that the end of a message is indicated by a blank line (obviously not the literal characters <blank line>).
+
+For a message with multiple lines:
+
+data: this is line one
+data: and this is line two
+You can send message IDs to be used if the connection is dropped:
+
+id: 33
+data: this is line one
+data: this is line two
+You can even send multiple messages in a single response so long as you separate the messages by blank lines:
+
+id: 34
+data: Remy is awesome
+
+id: 35
+data: Bruce is stinky
+And you can specify your own event types (the above messages will all trigger the message event):
+
+id: 36
+event: price
+data: 103.34
+
+id: 37
+event: news
+data: Bruce sells his collection of replica bananas
+You don’t have to worry about this structure on the client side. It only applies to the server, which I’ll touch on next.
+
+Typical Server #
+I’m not going to give a full walkthrough of the server-side code, since this is an HTML5 web site :) But there are a few important and simple features that you need to know to build the server (you’ll need this part anyway if you’re going to use EventSource).
+
+I’ve included all the files for this demo on GitHub for you to peruse at your own leisure, and I’ve also deployed a live example of this code.
+
+Ideally, you should use a server that has an event loop. This means you should not use Apache, but instead use a platform such as Node.js (which I’ve used) or Twisted for Python.
+
+Key properties:
+
+You can only accept EventSource requests if the HTTP request says it can accept the event-stream MIME type.
+You need to maintain a list of all the connected users in order to emit new events.
+You should listen for dropped connections and remove them from the list of connected users.
+You should optionally maintain a history of messages so that reconnecting clients can catch up on missed messages.
+Here’s a sample of my Node.js based server. It’s using Connect (a simple webby framework for Node). When it receives a request for /stats, it calls the following function. I’ve commented the code so you can follow along:
+
+function stats(request, response) {
+  // only response to an event-stream if the request
+  // actually accepts an event-stream
+  if (request.headers.accept == 'text/event-stream') {
+
+    // send the header to tell the client that we're going
+    // to be streaming content down the connection
+    response.writeHead(200, {
+      'content-type': 'text/event-stream',
+      'cache-control': 'no-cache',
+      'connection': 'keep-alive'
+    });
+
+    // support the polyfill - we'll come on to this later
+    if (request.headers['x-requested-with'] == 'XMLHttpRequest') {
+      response.xhr = null;
+    }
+
+    // if there was a lastEventId sent in the header, send
+    // the history of messages we've already stored up
+    if (request.headers['last-event-id']) {
+      var id = parseInt(request.headers['last-event-id']);
+      for (var i = 0; i < history.length; i++) {
+        if (history[i].id >= id) {
+          sendSSE(response, history[i].id, history[i].event, history[i].message);
+        }
+      }
+    } else {
+      // if the client didn't send a lastEventId, it's the
+      // first time they've come to our service, so send an
+      // initial empty message with no id - this will reset
+      // their id counter too.
+      response.write('id\n\n');
+    }
+
+    // cache their connection - the response is where we write
+    // to send messages
+    connections.push(response);
+
+    // send a broadcast message to all connected clients with
+    // the total number of connections we have.
+    broadcast('connections', connections.length);
+
+    // if the connection closes to the client, remove them
+    // from the connections array.
+    request.on('close', function () {
+      removeConnection(response);
+    });
+  } else {
+    // if the client doesn't accept event-stream mime type,
+    // send them the regular index.html page - you could do
+    // anything here, including sending the client an error.
+    response.writeHead(302, { location: "/index.html" });
+    response.end();
+  }
+}
+The important trick on the server is to ensure you don’t close the connection to the EventSource object. If you do, it will of course handle the closed connection, fire an error event, and try to reconnect. So you’ll just want to maintain the persistent connection.
+
+Polyfills and Tweaks to the Server #
+There are two good polyfills I know of, and though I prefer the one I wrote, I’ll still lay them both out for you.
+
+Yaffle’s Polyfill #
+The first is one by Yaffle (on github), available on github/Yaffle/eventsource.
+
+The cons:
+
+It doesn’t send the accepts header, and
+It completely replaces the EventSource object, so even if your browser supports EventSource natively, this script will replace it. But there’s a good reason for that.
+The pros:
+
+It maintains a persistent connection (whereas the one we’re using doesn’t), and
+More interestingly, it supports CORS (which I imagine is why it replaces the native EventSource).
+These two pros are quite compelling. But when I was testing, I couldn’t get it working in IE7 (which was my minimum browser target), so that might be a blocker for you…or not.
+
+Remy’s Polyfill #
+The second is my own, available on github.com/remy/polyfills.
+
+The cons:
+
+It uses polling, so once a small group of messages come down, it re-establishes the connection, which could lead to significant overhead (though less so on a Node-based server). You have to add about 4 extra lines to your server code.
+The pros:
+
+It doesn’t replace the native EventSource object (but that also implies that, for now, it won’t support CORS), and
+It supports IE7.
+Retrospectively, I might choose Yaffle’s polyfill over mine in the future if I wasn’t bothered about IE7 support.
+
+Using the Polyfill #
+By including the EventSource.js JavaScript library before my client-side code, I just need a couple of small changes to my server-side code. Other than that, everything on the client side works without any changes (as a polyfill should work).
+
+When posting the server’s reply to the client, instead of keeping the connection open, I include the following in my server when it’s finished writing the response:
+
+// send the data (event type, id, message, etc)
+response.write(data);
+
+// if our response contains our custom xhr property, then...
+if (response.hasOwnProperty('xhr')) {
+  // clear any previous timers using the xhr prop as the value
+  clearTimeout(response.xhr);
+
+  // now set a timer for 1/4 second (abritrary number) that
+  // then closes the connection and removes itself from the
+  // connection array.
+  // The delay is in place so that a burst of messages can
+  // go out on the same connection *before* it's closed.
+  response.xhr = setTimeout(function () {
+    response.end();
+    removeConnection(response);
+  }, 250);
+}
+Bugs? #
+The error event should always fire when the readyState changes, assuming you didn’t explicitly call the close method. This works nearly all the time, but in writing this article, I found a few edge cases where it doesn’t fire. In Chrome, if I put my machine to sleep and then woke it back up, it would close the connection but not fire the event, therefore never triggering a reconnection. As I said, this is an edge case and I’ll file a bug against it, so I don’t expect it to hang around for long.
+
+Why Not Use WebSockets? #
+There are two reasons I’d advocate using EventSource over WebSockets, as they’re currently the two contenders for sending real-time events to the browser.
+
+The first is that EventSource (as we saw earlier) works over regular HTTP and can therefore be replicated entirely using JavaScript if it’s not available natively. That means that we can polyfill browsers without support, like IE9.
+
+The second is probably more important: you should always use the right technology for the job. If your real-time data is sourced from your web site, and the user doesn’t interact in real-time, it’s likely you need Server-Sent Events.
+
+I recently saw a cool demo of snowflakes drifting down a web site. Each snowflake is a tweet based around the Christmas theme — like if someone mentions a particular Christmas-y term, it’s sucked in to the snowflake. Don’t get me wrong, I know this is a demo, and it’s very cool (if you wrote it, this is me sending you hugs), but it’s based on WebSockets. I’d suggest this demo should be based on EventSource since all the data is read-only and the user doesn’t interact with it at all.
+
+The point: evaluate the technology against your problem, and aim to get good fit.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Pros and cons
+
+1. lightweight - no headers 
+2. HTTP and HTTP/2 compatible
+3. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

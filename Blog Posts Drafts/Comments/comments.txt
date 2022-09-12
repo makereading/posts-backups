@@ -1,0 +1,167 @@
+Comments : Explain the why, not the how
+
+Comments should explain why, something has written a certain way rather than "how" something was written. 
+Comments that explain "how" something is done is the sign of confusing code that needs to be refactored.
+
+The best comment is a good name, for a variable, method or a class. 
+
+
+Are you commenting your code? There’s no question it’s important to comment your code, but it’s more important to know why you’re commenting your code.
+
+Are you commenting your code because the algorithm you created is confusing as all hell? (come on, we’ve all been there).
+
+That right there is NOT the correct way to comment your code. In fact, that’s not even the correct way to code. If you need instructions to follow along with your confusing code, then it’s confusing code that needs to be refactored.
+
+Comments in code should not have to explain how your code works. Your code should be easy enough to understand for anyone with a bit of programming knowledge to be able to follow along.
+
+So when should you use comments then? Comments are meant to explain why your code is doing what it’s doing. Why a certain algorithm is there or doing something may not be as clear to other programmers if they aren’t as familiar with the system.
+
+
+Common concerns during a code review might reveal:
+
+“Why do you use function X instead of function Y?
+“When would this conditional ever get executed?
+“Why did you rewrite this function like this?”
+
+
+The answers to many of these types of questions may not always be clear, even with the cleanest code. Answering these types of questions or describing this type of rationale is not only completely acceptable in comments, but also encouraged to help future programmers of your code.
+
+
+,##################################
+
+function recoverFromGrief() {
+    // Denial stage
+    absorbTheBadNews();
+    setNumbAsProtectiveState();
+    startToRiseEmotions();
+    feelSorrow();
+
+    // Anger stage
+    maskRealEffects();
+    directAngerToOtherPeople();
+    blameOthers();
+    getIrrational();
+
+    // bargaining stage
+    feelVulnerable();
+    regret();
+    askWhyToMyself();
+    dreamOfAlternativeWhatIfScenarios();
+    postoponeSadness();
+
+    // depression stage
+    stayQuiet();
+    getOverwhelmed();
+    beConfused();
+
+    // acceptance stage
+    acceptWhatHappened();
+    lookToTheFuture();
+    reconstructAndWalktrough();
+}
+
+
+function recoverFromGrief() {
+    denialStage();
+    angerStage();
+    bargainingStage();
+    depressionStage();
+    acceptanceStage();
+}
+
+function denialStage() {
+    absorbTheBadNews();
+    setNumbAsProtectiveState();
+    startToRiseEmotions();
+    feelSorrow();
+}
+
+function angerStage() {
+    maskRealEffects();
+    directAngerToOtherPeople();
+    blameOthers();
+    getIrrational();
+}
+
+function bargainingStage() {
+    feelVulnerable();
+    regret();
+    askWhyToMyself();
+    dreamOfAlternativeWhatIfScenarios();
+    postoponeSadness();
+}
+
+function depressionStage() {
+    stayQuiet();
+    getOverwhelmed();
+    beConfused();
+}
+
+function acceptanceStage() {
+    acceptWhatHappened();
+    lookToTheFuture();
+    reconstructAndWalktrough();
+}
+
+
+To get rid of comments fast, change your IDE to display comments with red background and yellow text. It will literally scream refactor me when browsing the code.
+Also prevents you from writing new comments.
+
+@GreenFieldCoder https://twitter.com/GreenFieldCoder
+
+
+Comments are a code smell. If you need to document a design decision, you should do it before the actual method code.
+
+Don't get suckered in by the comments, they can be terribly misleading: Debug only the code. - Dave Storer
+
+
+TL;DR: Leave comments just for important design decisions. Don't explain the obvious.
+
+The code has lots of comments. Comments are coupled to implementation and hardly maintained.
+
+
+
+final class ChatBotConnectionHelper {
+    // ChatBotConnectionHelper is used to create connection strings to Bot Platform
+    // Use this class with getString() function to get connection string to platform
+
+    public $id; // ChatBot Id
+
+    function getId() { // Gets id value
+    }
+
+    function setId($id) { // Sets id value
+    }
+
+    function getString() {
+        // Get Connection String from Chatbot
+        // ....
+    }
+}
+
+
+<?
+
+final class ChatBotConnectionSequenceGenerator {
+
+    private $name;
+
+    function connectionSequence() {
+        // ....
+    }
+}
+
+
+Linters can detect comments and check the ratio of comments/lines of code against a predefined threshold.
+
+If you have to spend effort looking at a fragment of code and figuring out what it’s doing, then you should extract it into a function and name the function after the what.
+
+Martin Fowler
+
+https://dev.to/alexbunardzic/code-comments-are-a-sign-that-something-s-off-19e1
+
+
+
+
+
+

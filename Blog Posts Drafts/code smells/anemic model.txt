@@ -1,0 +1,57 @@
+Your objects have no behavior.
+
+TL;DR: Don't use objects as data structures
+
+Protocol is empty (with setters/getters).
+
+If we ask a domain expert to describe an entity he/she would hardly tell it is 'a bunch of attributes'.
+
+
+
+Problems: 
+
+No Encapsulation.
+
+No mapping to real world entities.
+
+Duplicate Code
+
+Coupling
+
+Writer / Reader mismatch.
+
+
+Solutions
+1) Find Responsibilities.
+
+2) Protect your attributes.
+
+3) Hide implementations.
+
+4) Delegate
+
+
+Detection
+Sophisticated linters can automate detection.
+They should ignore setters and getters and count real behavior methods.
+
+Also Known as
+Data Class
+Tags
+Anemic
+OOP as Data
+Encapsulation
+Setters/Getters
+Mutability
+Conclusion
+Avoid anemic models. Focus always on protocol instead of data.
+Behaviour is essential, data is accidental.
+
+A key goal of OO design is to minimise depdencies between classes and compknents by packaging data and behaviour as close together as we can. In practice, a good rule of thumb for class design is to put fields and methods that use those fields in the same classes. Data classes are classes 
+
+ADM as consisting of a set of  behaviour-free classes containing business data required to model the domain. 
+
+The argument against this approach is that the data and methods are divorced, violating a fundamental principle of Object-Oriented design by removing the capability of the domain model to enforce its own invariants.
+
+A key goal of OO design is to minimise depdencies between classes and compknents by packaging data and behaviour as close together as we can. In practice, a good rule of thumb for class design is to put fields and methods that use those fields in the same classes. Data classes are classes which just have fields and no behaviour (besides simple getters and setters), and they break this rule of thumb, creating serious dependency issues in your code.
+

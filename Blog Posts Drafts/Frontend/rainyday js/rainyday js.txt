@@ -1,0 +1,11 @@
+The idea behind rainyday.js is to create a JavaScript library that makes use of the HTML5 canvas to render an animation of raindrops falling on a glass surface. 
+
+Template Name:- Rainyday.js:- Raindrops Effect With JavaScript.
+High Resolution: – Yes.
+Compatible Browsers: – All Browser.
+Source Files included: – HTML, Internal CSS, image and CDN.
+
+Rainyday.js is a JavaScript library that makes HTML5 canvas to render an animation. So here we made raindrops effects in the Rainyday.js library using CDN.
+
+
+

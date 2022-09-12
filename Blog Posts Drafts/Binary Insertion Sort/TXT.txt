@@ -1,0 +1,75 @@
+Binary insertion sort is a sorting algorithm similar to insertion sort, but instead of using linear search to find the position where the element should be inserted, we use binary search. Thus, we reduce the number of comparisons for inserting one element from O(N) (Time complexity in Insertion Sort) to O(log N).
+
+Insertion sort is sorting technique that works by finding the correct position of the element in the array and then inserting it into its correct position.
+
+Binary search is searching technique that works by finding the middle of the array for finding the element.
+
+As the complexity of binary search is of logarithmic order, the searching algorithm’s time complexity will also decrease to of logarithmic order.
+
+Implementation of binary Insertion sort. this program is a simple Insertion sort program but instead of the standard searching technique binary search is used.
+
+How Binary Insertion Sort works ?
+
+In binary insertion sort, we divide the array into two subarrays — sorted and unsorted. The first element of the array is in the sorted subarray, and the rest of the elements are in the unsorted one. 
+
+We then iterate from the second element to the last element. For the i-th iteration, we make the current element our “key.” This key is the element that we have to add to our existing sorted subarray.
+
+
+Binary Insertion Sort Algorithm
+Binary insertion sort for array A:
+
+Step 1: Iterate the array from the second element to the last element.
+Step 2: Store the current element A[i] in a variable key.
+Step 3: Find the position of the element just greater than A[i] in the subarray from A[0] to A[i-1] using binary search. Say this element is at index pos.
+Step 4: Shift all the elements from index pos to i-1 towards the right.
+Step 5: A[pos] = key.
+
+
+Complexity Analysis: 
+
+Worst Case
+For inserting the i-th element in its correct position in the sorted, finding the position (pos) will take O(log i) steps. However, to insert the element, we need to shift all the elements from pos to i-1. This will take i steps in the worst case (when we have to insert at the starting position). 
+
+We make a total of N insertions —  so, the worst-case time complexity of binary insertion sort is O(N^2).
+
+This occurs when the array is initially sorted in descending order.
+
+Best Case
+The best case will be when the element is already in its sorted position. In this case, we don’t have to shift any of the elements; we can insert the element in O(1). 
+
+But we are using binary search to find the position where we need to insert. If the element is already in its sorted position, binary search will take (log i) steps. Thus, for the i-th element, we make (log i) operations, so its best-case time complexity is Ω(N log N).
+
+This occurs when the array is initially sorted in ascending order.
+
+Average Case
+For average-case time complexity, we assume that the elements of the array are jumbled. Thus, on average, we will need O(i /2) steps for inserting the i-th element, so the average time complexity of binary insertion sort is θ(N^2).
+
+Space Complexity Analysis
+Binary insertion sort is an in-place sorting algorithm. This means that it only requires a constant amount of additional space. We sort the given array by shifting and inserting the elements. 
+
+Therefore, the space complexity of this algorithm is O(1) if we use iterative binary search. It will be O(logN) if we use recursive binary search because of O(log N) recursive calls.
+
+
+Strengths and Weaknesses of Binary Insertion Sort
+Binary insertion sort works efficiently for smaller arrays (<= 25 elements). This algorithm also works well for almost-sorted arrays, where the elements are near their position in the sorted array.
+
+However, when the size of the array is large, the binary insertion sort doesn’t perform well. We can use other sorting algorithms like merge sort or quicksort in such cases.
+
+Making fewer comparisons is also one of the strengths of this sorting algorithm; therefore, it is efficient to use it when the cost of comparison is high.
+
+
+Benefits: 
+
+It is an adaptive algorithm, which means that it works faster when the given array is already substantially sorted, i.e., the current position of the element is near its actual position in the sorted array.
+
+It is a stable sorting algorithm — the elements with the same values appear in the same order in the final array as they were in the initial array.
+
+Binary insertion sort works efficiently when the array has a low number of elements.
+
+While performing quicksort or merge sort, when the subarray’s size becomes small (say <=25 elements), it’s more efficient to use binary insertion sort.
+
+This algorithm is also efficient when the cost of comparison between keys is sufficiently high. For example, if we want to sort an array of strings, the comparison operation of two strings will be high.
+
+Binary Insertion Sort has a quadratic time complexity just as Insertion Sort. Still, it is usually faster than Insertion Sort in practice, which is apparent when comparison takes significantly more time than swapping two elements.
+
+

@@ -1,0 +1,62 @@
+It's time we revisited Git and how important it is to master in order to advance in our careers. This guide serves as a reference for what I believe are necessary, yet lesser-known concepts. Mastering Git will make a huge difference in how you manage code and your own day-to-day workflow. Because Git commands are a bit archaic and hard to remember, this guide will be broken up by concepts and expected behavior instead.
+
+Git Commands: 
+
+Logging: 
+
+Git log is a utility tool to review and read a history of everything that happens to a repository. Multiple options can be used with a git log to make history more specific. Generally, the git log is a record of commits.
+
+git log
+git log --oneline # more succinct output
+git log --graph # with a visual graph of branches
+
+View your "undo" history 
+
+# git reflog
+
+Because sometimes git log doesn't cut it, especially for commands that don't show up in your commit history.
+
+reflog is basically your safety net after running "scary" commands like git rebase. You'll be able to see not only the commits you made, but each of the actions that led you there. See this Atlassian article to learn more about how refs work.
+
+Scenario: You made some commits, did a git reset --hard to “undo” those changes (see above), and then realized: you want those changes back!
+
+Undo with: git reflog and git reset or git checkout
+
+What’s happening: git reflog is an amazing resource for recovering project history. You can recover almost anything—anything you’ve committed—via the reflog.
+
+You’re probably familiar with the git log command, which shows a list of commits. git reflog is similar, but instead shows a list of times when HEAD changed.
+
+
+# View your current state + any merge conflicts
+
+git status
+
+While git status is a pretty basic command we all learn early on, its importance as a learning tool for internalizing git fundamentals bears repeating. It can also help you navigate through a complicated rebase or merge.
+
+
+See the differences in your staged (or unstaged) changes
+
+git diff --staged # for staged changes
+git diff # for unstaged changes
+
+See the differences between two branches
+
+git diff branch1..branch2
+
+To see the difference in changes of file, between the current state and last commit and between branches too. 
+
+
+
+
+Navigation
+
+ want to see what I did before
+
+git reset <commit-sha>
+
+This will uncommit and unstage those changes but leave those files in the working directory.
+
+
+
+
+

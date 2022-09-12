@@ -1,0 +1,111 @@
+Skeleton loading screens will improve your application’s user experience and make it feel more performant
+
+What do Reddit, Discord, Medium, and LinkedIn have in common? They use what’s called a skeleton loading screen for their applications.
+
+A skeleton screen is essentially a wireframe of the application. The wireframe is a placeholder until the application finally loads.
+
+Here’s how usually skeleton loading screens look. Notice how they’re a replacement for the traditional loading spinner.
+
+The skeleton loading screen essentially impersonates the original layout.
+
+This lets the user know what’s happening on the screen. The user interprets this as the application is booting up and the content is loading.
+
+
+
+Instead of showing a loading spinner, we could show a skeleton screen that makes the user see that there is progress happening when launching and navigating the application.
+
+A skeleton screen is an animated placeholder that simulates the layout of a website while data is being loaded.
+
+They let the user know that some content is loading and, more importantly, provide an indication of what is loading, whether it's an image, text, card, and so on.
+
+This gives the user the impression that the website is faster because they already know what type of content is loading before it appears. This is referred to as perceived performance.
+
+Why Use Skeleton Screens?
+They appear to be faster and are more user friendly. Improved perceived performance provides both good UX and helps in increasing conversion rate.
+The issue with spinners/loaders is that we have no idea what is loading or how long it will take.
+The use of spinners/loaders creates a period of uncertainty for the user since the load time is unknown.
+Skeleton screens draw the user's attention to progress rather than waiting time.
+It creates an illusion of speed and short load time
+
+When to use them
+Use to notify the user that something is loading when more than one element is loading at the same time.
+Use when loading data takes more than 3 seconds.
+Use on websites with a lot of traffic.
+Use for a background or long-running process.
+
+
+Things to keep in mind
+While implementing skeleton screens, we should keep in mind the goal we are trying achieve with the website or app, and prioritize loading the content.
+
+Use of skeleton loading screens is no excuse to skip actual performance optimization, and if you can cache meaningful content and display that, that'll be good.
+
+
+
+In simplest terms, Skeleton Loader is a static / animated placeholder for the information that is still loading. It mimic the structure and look of the entire view.
+
+
+When to use
+
+Use on high-traffic pages where resources takes a bit long to load like Account Dashboard.
+When the component contains good amount of information, such as List or Card.
+Could be replaced by Spin in any situation, but can provide a better user experience.
+Use when there’s more than 1 element loading at the same time that requires an indicator.
+When not to use
+
+Not to use for a long-running process, e.g. importing data etc.
+Not to use for fast processes that take less than 300ms.
+
+Things to keep in mind
+The goal is to design for a perception of decreased waiting time.
+Contents should replace skeleton exactly by position and size immediately after they are loaded.
+Using motion that moves from left to right (wave) gives a better perception of decreased waiting time than fading in and out (pulse).
+Using motion that is slow and steady gives a perception of decreased waiting time.
+When designing Skeleton Loader for image gallery or related stuff, the dominant color based skeleton objects provides future context to objects that are loading. One can see such pattern in Google Images.
+
+
+Research summary (TL;DR)
+Skeleton screens (as splash screens), when used to indicate that a screen is loading, are perceived as being shorter in duration when compared against a blank screen (our control) and a spinner — but not by much
+Skeleton screens should not block gradual content loads (real content should replace skeleton objects immediately when the data is available). The vast majority of skeleton screens in use today are splash screens, and not skeleton screens in the original way described by Luke Wroblewski.
+When designing skeleton screens, I recommend using motion to further decrease perceived duration time
+Skeleton screens that leverage motion that moves from left to right (e.g. a wave or shimmer like animation, much like Facebook or Google uses) are perceived as shorter in duration than skeletons that pulse (opacity fading in and out)
+Skeleton screens using motion that is slow and steady are perceived as shorter in duration than skeleton screens that use fast or rapid motion
+The sample sizes in this study are too small to conclude anything definitively, but they do provide useful hints as to how we could design waiting experiences
+
+
+The term “skeleton screen” was introduced in 2013 by product designer Luke Wroblewski in a blog post about reducing perceived wait time. In the post, he explains how gradually revealing page content turns user attention to the content being loaded, and off of the loading time itself.
+
+
+Why do skeleton screens work?
+Skeleton screens don’t really make pages load faster. Instead, they are designed to make it feel like pages are loading faster.
+
+Skeleton screens serve a similar function as spinners and other loading animations: a visual cue that the user must wait a bit for content to load.
+
+
+
+
+Unlike spinners, however, skeleton screens create an illusion of progress. A spinner animation is unrelated to the content and tells us nothing about how much longer we’ll need to wait. With skeleton screens, as if we’re watching the content come into view. As a result, users perceive loading times as shorter in duration when shown a skeleton screen than when shown a spinner or a blank screen, even when the waiting period is the same.
+
+To put it bluntly, skeleton screens trick us into a better user experience without our realizing it. Think about it: You’ve almost definitely seen this technique used before, but did you know what was happening?
+
+How to Use Skeleton Screens on Your Site
+Skeleton screens are one method that can improve the user experience on your website by giving the perception of shorter load times. Still, they’re not the perfect solution for every loading scenario.
+
+Generally, skeleton screens work best on:
+
+Resource-intensive pages: For example, pages that require multiple background scripts will take longer to load. This is common in web applications, which pull data from several sources to form a complete page.
+Image-heavy web pages: If you need to load multiple images at once, a skeleton screen might make a good placeholder. For these pages, consider implementing lazy loading first, which is a similar technique for decreasing perceived load time.
+And here are some cases when you should avoid them:
+
+As a replacement for poor performance: Skeleton screens don’t work forever and eventually lose their effect when load times drag on for too long. If you can further optimize your website to actually load content more quickly, always pursue that first. If you’re new to lowering load times, our Ultimate Guide to Website Performance is a great place to start.
+On pages that load quickly: For pages that load in less than 500 milliseconds, skeleton screens likely won’t make a difference in the experience.
+Videos: Users still associate video buffering with spinners. Avoid skeleton screens any time a video is loading on your page.
+Longer processes: Uploads, downloads, file conversions, and other processes that take longer to complete should use a different visual cue, like a progress bar.
+Skeleton screens that don’t match the rendered content: Try to make your skeleton screens match the final content in size and placement as closely as possible. When users see a skeleton screen followed by content that does not follow logically, this subverts their expectations and negates any benefit.
+Finally, as with all UX optimizations, we recommend testing skeleton screens on your visitors if you have the means to do so. Even though research has found them effective, that doesn’t mean they’re guaranteed to work on your audience. Skeleton screens may even cause confusion, but the only way to know is to test it with your users.
+
+
+Skeleton Screens: Less Creepy Than They Sound
+Any small UX improvement you can make will give you a leg up on competitors, especially when it comes to how fast your website runs. Alongside other performance optimizations, skeleton screens are a worthy tactic to keep users invested in your content.
+
+
+

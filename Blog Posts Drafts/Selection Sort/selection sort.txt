@@ -1,0 +1,44 @@
+
+
+Usecases: 
+
+1. For the bigger array, how selection sort will work ?
+
+The size of the array involved is rarely of much consequence. The real question is the speed of comparison vs. copying. The time a selection sort will win is when a comparison is a lot faster than copying. Just for example, let's assume two fields: a single int as a key, and another megabyte of data attached to it.In such a case, comparisons involve only that single int, so it's really fast, but copying involves the entire megabyte, so it's almost certainly quite a bit slower.
+
+Since the selection sort does a lot of comparisons, but relatively few copies, this sort of situation will favor it. 
+
+2. Selection is based on keys, hence a file with large values and small keys can be efficiently sorted with selection sort.
+
+3. Selection sort creates a sub-list, LHS of the ‘min’ element is already sorted and RHS is yet to be sorted. Starting with the first element the ‘min’ element moves towards the final element.
+
+Worst Case:
+-----------
+As far as worst case for a selection sort, it'll be pretty much the opposite -- anything where copying is fast, but comparison is slow.
+
+
+
+No. of Comparisons and Swaps:
+-----------------------------
+
+Selection Sort makes O(N^2) comparisons ( every element is compared to every other element). 
+Selection Sort makes O(N) swaps to get all elements in the correct place.
+
+When to use and when to avoid Selection Sort ?
+----------------------------------------------
+
+Selection sort can be good at checking if everything is already sorted. It is also good to use when memory space is limited. This is because unlike other sorting algorithms, selection sort doesn't go around swapping things until the very end, resulting in less temporary storage space used.
+
+Use selection sort in the following scenarios:
+
+When the array is NOT partially sorted
+When we have memory usage constraints
+When a simple sorting implementation is desired
+When the array to be sorted is relatively small
+
+Avoid using Selection sort when:
+--------------------------------
+
+The array to be sorted has a large number of elements
+The array is nearly sorted
+You want a faster run time and memory is not a concern.

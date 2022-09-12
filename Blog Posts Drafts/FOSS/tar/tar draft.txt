@@ -1,0 +1,9 @@
+The Linux “tar” stands for tape archive, which is used by a large number of Linux/Unix system administrators to deal with tape drives backup.
+
+The tar command is used to rip a collection of files and directories into a highly compressed archive file commonly called tarball or tar, gzip and bzip in Linux.
+
+The tar is the most widely used command to create compressed archive files and that can be moved easily from one disk to another disk or machine to machine.
+
+
+
+

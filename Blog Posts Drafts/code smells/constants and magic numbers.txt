@@ -1,0 +1,142 @@
+
+A magic number is a numeric value that’s encountered in the source but has no obvious meaning. This “anti-pattern” makes it harder to understand the program and refactor the code.
+
+Yet more difficulties arise when you need to change this magic number. Find and replace won’t work for this: the same number may be used for different purposes in different places, meaning that you will have to verify every line of code that uses this number.
+
+
+Benefits:
+
+
+Benefits
+The symbolic constant can serve as live documentation of the meaning of its value.
+
+It’s much easier to change the value of a constant than to search for this number throughout the entire codebase, without the risk of accidentally changing the same number used elsewhere for a different purpose.
+
+Reduce duplicate use of a number or string in the code. This is especially important when the value is complicated and long (such as 3.14159 or 0xCAFEBABE).
+
+Good to Know
+Not all numbers are magical.
+If the purpose of a number is obvious, there’s no need to replace it. A classic example is:
+
+for (i = 0; i < сount; i++) { ... }
+
+
+
+Alternatives
+Sometimes a magic number can be replaced with method calls. For example, if you have a magic number that signifies the number of elements in a collection, you don’t need to use it for checking the last element of the collection. Instead, use the standard method for getting the collection length.
+
+Magic numbers are sometimes used as type code. Say that you have two types of users and you use a number field in a class to specify which is which: administrators are 1 and ordinary users are 2.
+
+How to Refactor
+Declare a constant and assign the value of the magic number to it.
+
+Find all mentions of the magic number.
+
+For each of the numbers that you find, double-check that the magic number in this particular case corresponds to the purpose of the constant. If yes, replace the number with your constant. This is an important step, since the same number can mean absolutely different things (and replaced with different constants, as the case may be).
+
+
+A method makes calculations with lots of numbers without describing their semantics
+
+
+Your code uses a number that has a certain meaning to it.
+
+
+
+Problems:
+
+Coupling
+Low testability
+Low readability
+Rename the constant with a semantic and name (meaningful and intention revealing).
+
+Replace constants with parameters, so you can mock them from outside.
+
+The constant definition is often a different object than the constant (ab)user.
+
+### Solution
+Replace this number with a constant that has a human-readable name explaining the meaning of the number.
+
+
+
+## Detection
+Many linters can detect number literal in attributes and methods.
+
+
+
+Quote:
+
+In a purely functional program, the value of a [constant] never changes, and yet, it changes all the time! A paradox!
+Joel Spolsky
+
+
+A magic number is a number that comes out of nowhere, and is directly used in a statement. Magic numbers are often used, for instance to limit the number of iterations of a loop, to test the value of a property, etc.
+
+Using magic numbers may seem obvious and straightforward when you’re writing a piece of code, but they are much less obvious and straightforward at debugging time.
+
+That is why magic numbers must be demystified by first being assigned to clearly named variables before being used.
+
+-1, 0 and 1 are not considered magic numbers.
+
+public static void doSomething() {
+	for(int i = 0; i < 4; i++){                 // Noncompliant, 4 is a magic number
+		...
+	}
+}
+Compliant Solution
+public static final int NUMBER_OF_CYCLES = 4;
+public static void doSomething() {
+  for(int i = 0; i < NUMBER_OF_CYCLES ; i++){
+    ...
+  }
+}
+
+Exceptions
+This rule ignores hashCode methods.
+
+-----------------------------------
+
+
+This is probably one of the oldest rules in software development. I remember reading it in the late sixties in introductory COBOL, FORTRAN, and PL/I manuals. In general it is a bad idea to have raw numbers in your code. you should hide them behind well-named constants.
+
+For example, the number 86,400 should be hidden behind the constant SECONDS_PER_DAY. If you are printing 55 lines per page, then the constant 55 should be hidden behind the constant LINES_PER_PAGE.
+
+Some constants are so easy to recognize that they don’t always need a named constant to hide behind so long as they are used in conjunction with very self-explanatory code. For example:
+
+  double milesWalked = feetWalked / 5280.0;
+  int dailyPay = hourlyRate * 8;
+  double circumference = radius * Math.PI * 2;
+Do we really need the constants FEET_PER_MILE, WORK_HOURS_PER_DAY, and TWO in the above examples? Clearly, the last case is absurd. There are some formulae in which constants are simply better written as raw numbers. You might quibble about the WORK_HOURS_PER_DAY case because the laws or conventions might change. On the other hand, that formula reads so nicely with the 8 in it that I would be reluctant to add 17 extra characters to the readers’ burden. And in the FEET_PER_MILE case, the number 5280 is so very well known and so unique a constant that readers would recognize it even if it stood alone on a page with no context surrounding it.
+
+Constants like 3.141592653589793 are also very well known and easily recognizable. However, the chance for error is too great to leave them raw. Every time someone sees 3.1415927535890793, they know what it is π, and so they fail to scrutinize it. (Did you catch the single-digit error?) We also don’t want people using 3.14, 3.1459, 3.142, and so forth. Therefore, it is a good thing that Math.PI has already been defined for us.
+
+The term “Magic Number” does not apply only to numbers. It applies to any token that has value that is not self-describing. For example:
+
+  assertEqual(7777, Employee.find("John Doe").employeeNumber());
+There are two magic numbers in this assertion. The first is obviously 7777, though what it might mean is not obvious. The second magic number is "John Doe," and again the intent is not clear.
+
+It turns out that "John Doe" is the name of employee #7777 in a well-known test database created by out team. Everyone in the team knows that when you connect to this database, it will have several employees already cooked into it with well-known values and attributes. It also turns out that "John Doe" represents the sole hourly employee in that test database. So this test should really read:
+
+  assertEqual(
+    HOURLY_EMPLOYEE_ID,
+    Employee.find(HOURLY_EMPLOYEE_NAME).employeeNumber());
+    
+
+
+A Magic Number is a hard-coded value that may change at a later stage, but that can be therefore hard to update.
+
+For example, let's say you have a Page that displays the last 50 Orders in a "Your Orders" Overview Page. 50 is the Magic Number here, because it's not set through standard or convention, it's a number that you made up for reasons outlined in the spec.
+
+Now, what you do is you have the 50 in different places - your SQL script (SELECT TOP 50 * FROM orders), your Website (Your Last 50 Orders), your order login (for (i = 0; i < 50; i++)) and possibly many other places.
+
+Now, what happens when someone decides to change 50 to 25? or 75? or 153? You now have to replace the 50 in all the places, and you are very likely to miss it. Find/Replace may not work, because 50 may be used for other things, and blindly replacing 50 with 25 can have some other bad side effects (i.e. your Session.Timeout = 50 call, which is also set to 25 and users start reporting too frequent timeouts).
+
+Also, the code can be hard to understand, i.e. "if a < 50 then bla" - if you encounter that in the middle of a complicated function, other developers who are not familiar with the code may ask themselves "WTF is 50???"
+
+That's why it's best to have such ambiguous and arbitrary numbers in exactly 1 place - "const int NumOrdersToDisplay = 50", because that makes the code more readable ("if a < NumOrdersToDisplay", it also means you only need to change it in 1 well defined place.
+
+Places where Magic Numbers are appropriate is everything that is defined through a standard, i.e. SmtpClient.DefaultPort = 25 or TCPPacketSize = whatever (not sure if that is standardized). Also, everything only defined within 1 function might be acceptable, but that depends on Context.
+
+
+It's bad for the same reason SPOT (Single Point of Truth) is good: If you wanted to change this constant later, you would have to hunt through your code to find every instance. It is also bad because it might not be clear to other programmers what this number represents, hence the "magic"
+
+

@@ -1,0 +1,136 @@
+Long Methods: 
+------------
+
+What is the long method code smell? It’s about as simple as it sounds: it’s just a method which includes many lines of code. Exactly how long is too long is debatable and somewhat dependent on language. For instance Sandi Metz argues in her rules for developers that methods should be no more than five lines long. Some prefer methods that are nearly always just one line.
+
+
+Whatever the “right” number is, surely fifty or a hundred is way passed it. Hell, ten is probably past it. But the real measure isn’t the number of lines, that’s just the smell. The underlying problems caused by long methods are what should trigger a refactor, the smell should just get your attention.
+
+#$# Give an example
+
+Problems:
+---------
+
+The code is hard to read. Code is read vastly more than it’s written, so those few extra moments to shorten a method offer potentially huge returns. When you have to make a change in a long method, you need to read and understand every line of code to safely make the change. In this example we’re forced to load all of the work this method is doing into our heads just to be able to understand what’s going on, let alone be in a position to change any part of it.
+
+The code is doing more than one thing. Single Responsibility Principle, a method should really only do one thing. It’s nearly impossible to only do one thing in that many lines of code. This is especially true in languages as expressive as Ruby, as in the example. Our method is named `generate_tps_summary_report` so we presume that’s what it’s doing, but under the hood it’s doing many things. It’s calculating a start date, grabbing some documents from the database and then cleaning those documents, grabbing a field from those records and formatting it into a string, checking to make sure that the data exists, and writing the data to a file… at a minimum. That’s a lot of work for one method or function.
+
+It makes the code hard to maintain. I have to spend extra time figuring out what this method does, which makes me not want to touch it in the first place, which means code like this is going to tend to go stale. Even more, code like this is hard to test, and that erodes my confidence that I can change it without unknowingly breaking something. Code tends to attract more of the same design patterns (or anti-patterns) already present in it, so future me is much more likely to just continue dumping logic into this method since that’s “faster” than refactoring it and it seems less risky in the short term. Methods like this turn into bigger messes over time.
+
+The code may be duplicative. It’s a lot easier to find duplication when I have small methods with clear names. If getting the date 30 days ago is something I need to do again in the future, I’ll probably just end up writing code that does the same thing in a slightly different way somewhere else. If, instead, I had a get_past_date(days_ago=30) I’m less likely to repeat myself.
+
+
+The code tends to produce other code smells. In this example you can see I’ve started chunking up the code into groups with comments. That’s actually it’s own smell, and it arises naturally as the method gets longer and more complicated. The best comment is a good name.
+
+
+Fixing it:
+---------
+
+Decide if it’s worth it. Yes, I know, I’ve spent all this time complaining about this code so why wouldn’t we just launch into a refactor? The truth is refactoring takes time, and it’s not always worth it. Some things to consider:
+
+Does this code change frequently (alternatively, how likely is it to change in the future)? Code that gets touched a lot is a good candidate for refactoring. That one-off script that you’ll never touch again can probably stay put.
+Do bugs tend to come from this part of the code? Sometimes you’ll notice a method tends to produce bugs despite multiple “fixes”. That’s a good sign it can be simplified.
+
+
+Test coverage. Don’t start changing anything until every line of the method is covered. It’s tempting to dive right in, but there’s a good chance you’ll create a bug that comes back to bite you later.
+
+Refactor. There are a few ways to simplify long methods.
+
+The Extract Method. Pull out those chunks of code and lines that looks like they are working closely together into their own methods. Give them good, clear names and reference them back in the spot you extracted them out of.
+If you have a lot of local variables making method extraction difficult, you might have a new object trying to get out. Look for opportunities to create a new class where it makes sense.
+
+Signs and Symptoms
+A method contains too many lines of code. Generally, any method longer than ten lines should make you start asking questions.
+
+
+Reason for the problem:
+
+Reasons for the Problem
+Like the Hotel California, something is always being added to a method but nothing is ever taken out. Since it’s easier to write code than to read it, this “smell” remains unnoticed until the method turns into an ugly, oversized beast.
+
+Mentally, it’s often harder to create a new method than to add to an existing one: “But it’s just two lines, there’s no use in creating a whole method just for that...” Which means that another line is added and then yet another, giving birth to a tangle of spaghetti code.
+
+
+Treatment:
+As a rule of thumb, if you feel the need to comment on something inside a method, you should take this code and put it in a new method. Even a single line can and should be split off into a separate method, if it requires explanations. And if the method has a descriptive name, nobody will need to look at the code to see what it does.
+
+use extract method
+
+
+
+
+Payoff
+Among all types of object-oriented code, classes with short methods live longest. The longer a method or function is, the harder it becomes to understand and maintain it.
+
+In addition, long methods offer the perfect hiding place for unwanted duplicate code.
+
+
+Performance
+Does an increase in the number of methods hurt performance, as many people claim? In almost all cases the impact is so negligible that it’s not even worth worrying about.
+
+Plus, now that you have clear and understandable code, you’re more likely to find truly effective methods for restructuring code and getting real performance gains if the need ever arises.
+
+
+
+
+New Concepts:
+
+1. Extract Method
+2. Replace Temp with Query
+3. Introduce Parameter Object
+4. Preserve whole object
+5. Replace method with method object
+6. Decompose conditional
+
+
+Programs are meant to be read by humans and only incidentally for computers to execute.
+
+Donald Knuth
+
+
+
+Definition: A method has too many lines of code, making it hard to understand.
+
+Solution:
+
+Extract duplicate code into a new method
+Extract code into smaller methods
+
+
+how long is too long
+
+Not so fast. There are two issues worth discussing about long methods.
+
+First, what is a long method? What exactly is "LONG"? How long is too long? Five lines? Certainly not. Twenty? Uh, probably not. Forty? Hmmm, probably. Eighty? Almost definitely. But like all code smells there's rarely a hard and fast rule, and there are always exceptions.
+
+There are really a few things you should take into account when deciding if a code smell needs to be refactored. One is the complexity of the method. If the method has a lot of loops and branches, then the longer it is, the worse it is. If the method mostly contains highly scannable code, such as configuration, text, HTML, or object/data definitions, then you can definitely tolerate a longer method.
+
+Here's a reasonable rule of thumb: between one half and one screen height max (depending on resolution and font size) for a single method. Yup, it's inexact, and there's plenty of exceptions, but it's a good quick rule. Anything over that you should look closer.
+
+Think of it like wasabi on your sushi. It's hard to describe what "too much" is in micrograms, but you'll know it when you taste it. :)
+
+So you should also tune yourself to see methods as being too long at a glance. Don't count the lines. Just follow your gut. If it looks too long, then look closer. Remember these are code smells. They don't indicate a problem 100% of the time. They just give us guidelines to look closer and decide if we need to refactor.
+
+The second issue with Long Methods that we have to be careful is that they are possibly one of the sneakiest kinds of code smells. If they were D&D characters, they'd have a +11 to stealth. Why? Because they don't just appear suddenly. They slowly creep up on us. And we almost never write them first try. Instead, we start with a perfectly acceptable method length. Maybe ten lines long. Then a few weeks later we need to add a new condition to the method. It's something simple. Just three more lines of code. Still not too long. And the logic we add DEFINITELY belongs inside this method.
+
+Then a month later, we need to add another line of code to each of the three branches of our main condition in the method. Three more lines. That definitely doesn't make it too long. Then a bit later we have to add more data to the return value. Two more lines. But you don't refactor because you're returning more data. So we don't. The next week we get a critical bug in production. The quickest fix is to add another else branch. So we do that quickly. Four more lines of code. We were so stressed we didn't even think about the length of the method. We just needed to get the bug fixed.
+
+This pattern repeats and repeats. It's insidious, and we never notice that somehow our method has become too long.
+
+Which grain of sand turns a hill into a mountain?
+
+Here's a concrete example of some code (heavily modified) from the Thinkster.io codebase. Take a moment and just try to get the gist of what it's doing.
+
+One thing we've done is given ourselves the ability to more easily read the method, and see what it's doing. We've turned it from a long method that needs a lot of time to really see what it's doing, to something that can be understood much more easily. You have to look at a lot fewer details to understand this version of the method.
+
+That's the beauty of keeping methods short. In order to do that we usually have to create more methods. Those methods have names. Those names give us better descriptions of what our code is doing. We get a better abstraction of our code that is easier to understand at our current abstraction level.
+
+If you think about it, it's kind of beautiful how the various methods of improving code quality work together. A code smell makes us look at some code. We decide there's a problem and we refactor. The refactoring to tackle the code smell makes us use techniques that increase readability. Without meaning to directly improve readability we do that by nature of tackling the code smell. And it really doesn't take that much time to do a refactoring like this.
+
+But we have to be diligent, and we have to train ourselves on what to look for. And we also have to lower our tolerance to just "fix it later". As the great band, Creedence Clearwater Revival so beautifully sang in 1972, Someday Never Comes.
+
+
+
+
+
+

@@ -1,0 +1,30 @@
+Title: JUST
+
+🤖 Just a command runner
+
+**Just** is a handy way to save and run project-specific commands. Commands are stored in a file called justfile or Justfile with syntax inspired by make:
+
+
+Official Website: https://just.systems/
+Official Documentation: https://just.systems/man/en
+Git Reposity: https://github.com/casey/just
+Examples: https://github.com/casey/just/tree/master/examples
+
+
+How it works: 
+
+1. We just need to create a file named ```justfile``` or ```JustFile```. 
+2. Then we need to add command(s) in a groupwise manner under a name, as given below.
+
+```
+
+hello:
+	echo "Hello !"
+	echo "This will be excuted next"
+```
+ 
+
+In this blog post we will see about the opensource software JUST,  
+
+1. 
+

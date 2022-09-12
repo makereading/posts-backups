@@ -1,0 +1,87 @@
+Often you might be tempted to use a database because ther can be an understandable reluctance to introduce new technologies into a web stack. This leads people to try to use their RDBMS as a way to do background processing or service communication. While this can often appear to ‘get the job done’, there are a number of limitations and concerns that should not be overlooked.
+
+There are two aspects to any asynchronous processing: the service(s) that creates processing tasks and the service(s) that consume and process these tasks accordingly. In the case of using a database as a method for this, typically there would be a database table which has records that represent notified tasks and then a flag to represent which state the task is in and whether the task is completed.
+
+
+
+Polling Can Hurt
+The first issue revolves around how to best consume and process these tasks stored within a table. With a traditional database this typically means a service that is constantly querying for new processing tasks or messages. The service may have a database poll interval of every second or every minute, but the service is constantly asking the database if there has been an update. Polling the database for processing has several downsides. You might have a short interval for polling and be hammering your database with constant queries. Alternatively, you could perhaps set a long interval in which case there will be many unnecessary processing delays. In the event of having multiple processing steps, the fastest route through your system has now been delayed to the sum of all the different polling intervals.
+
+DB Polling
+
+Polling requires very fast and frequent queries to the table to be most effective, which adds a significant load to the database even at a medium volume. Even worse, a given database table is typically prepared to be fast at adding data, updating data or querying data, but almost never all three on the same table. If you are constantly inserting, updating and querying, race conditions and deadlocks become inevitable. These ‘locks’ occur because multiple consumers will all be “fighting” with each other over the same table and with the ‘producers’ constantly adding new items. You will see load increase for the database, performance decrease and pile-ups become increasingly common as the volume scales up.
+
+
+Manual Cleanup
+In addition to that, clearing old jobs can be troublesome as well because at even a medium volume, there will be many tasks in the database table. At certain intervals, the old completed tasks need to be removed otherwise the table will grow quite large. Unfortunately, this has to be performed manually and deletes are even often not particularly efficient for tables especially when being removed so frequently in conjunction with updates and queries all happening at the same time.
+
+Scaling Won’t Be Easy
+In the end, while a database will appear to work at first as a simple way to send background instructions to be processed, this approach will come back to bite you. The many limitations such as constant polling, manual cleanups, deadlocks, race conditions and manual handling of failed processing should make it fairly clear that a database table is not a scalable strategy for this type of processing.
+
+
+The takeaway here is that asynchronous processing is useful whether you need to send an sms, validate emails, approve posts, process orders, or just pass information between services. This type of background processing is simply not a task that a traditional RDBMS is best-suited to solve. While there are exceptions to this rule with PostgreSQL and its excellent notify support, there is a different class of software that was built from scratch for asynchronous processing use cases.
+
+This type of software is called a message queue and you should strongly consider using this instead for a far more reliable, efficient and scalable way to perform asynchronous processing tasks. In the next part of this series, we will explore several different message queues in detail to understand how they work as well as how to contrast and compare the various options. Hope that this introduction was helpful and please let me know what you’d like to have covered in future parts of this series.
+
+
+
+Database as a queue for anti pattern:
+
+“When all you have is a hammer, every problem looks like a nail.”
+
+When all you know is SQL Server, it’s tempting to try and solve every problem with a relational database, but often it’s not the best tool for the job. Today I want to introduce you to an excellent example of this, the ‘Database As Queue’ anti-pattern. It’s a common specimen that you’ll find in the wild in many enterprise development shops.
+
+It works like this: Usually there’s a piece of data that needs to be processed through some workflow, often by a number of different applications or processes.
+
+Database_as_queue
+
+There’s usually a table with some data and a status column. Each process is designed to process data at a particular status. Process 1 in this example inserts records with the status ‘New’, Process 2 picks up ‘New’ records and updates the status to ‘P2 Complete’, Process 3 picks up ‘P2 Complete’ records… you get the picture.
+
+When I say ‘picks up’, what I mean is that each process sits there polling the database at some interval running a select statement something like this:
+
+SELECT * FROM MyWorkflow WHERE Status = 'New'
+
+Why is it an anti-pattern?
+
+Firstly, there’s the polling. Either you have a short interval and hammer your database into submission, or you have a long interval and even the fastest route through your system is the sum of all the (long) intervals.
+
+Secondly there’s the fact that SQL Server is very efficient at insertions, or updates, or queries, but rarely all three on the same table. To make the polling queries perform, you need to put an index on the status, but indexes make for slow inserts. Locks can become a major problem.
+
+Thirdly there’s the issue of how you clear records once the workflow is complete. If you don’t clear the table down at intervals, it will keep growing until it starts to hit the performances of your queries and eventually become a serious operations problem. The problem is, deletes are inefficient on SQL Server.
+
+Fourthly, sharing a database between applications (or services) is a bad thing. It’s just too tempting to put amorphous shared state in there and before you know it you’ll have a hugely coupled monster.
+
+So what should I do?
+
+Simple, use the right tool for the job: this scenario is crying out for a messaging system. It solves all the problems described above; no more polling, efficient message delivery, no need to clear completed messages from queues, and no shared state.
+
+
+
+
+Using a database as a queue can be simpler to setup and probably easier to test on a development machine. But running a database as a queue in production may not be a very good idea; especially in a high traffic scenario. Although a database may not be the right tool for queueing, let's look at the pros & cons of using it as such.
+
+Pros:
+
+Easier to setup
+May reduce the number of moving parts in your application if you use the same database
+Cons:
+
+For lot's of reads and writes, there has to be some mechanism for locking rows and updating the indexes etc.
+Polling workers would also lock up an index in order to do work on it and update the row with the final status of the job.
+In such scenarios, the writes to the DB may be queued and would take longer to execute.
+Messaging queues such as SQS, Beanstalkd, RabbitMQ etc. are built to handle these scenarios. Since they only care about a message being stored and processed, they don't have to worry about locking and transaction logging (which is required by a database). Adding a messaging queue to your system will help it scale much more easily. Also, it'll let the database breathe by allowing it to do actual transaction processing without worrying about messaging as well.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

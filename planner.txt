@@ -1,0 +1,35 @@
+Instagram Post and Youtube Videos, PPT
+
+
+
+
+
+
+
+
+
+
+#################################
+
+
+Blogs:
+
+Pigeonhole Principle
+code review
+Kadane’s Algorithm
+Floyd’s Cycle Detection Algorithm
+Euclid’s Algorithm
+catalan numbers
+circular queue
+Queue
+angular sse
+KMP Algorithm.
+Binary Insertion sort. - done
+pigeon hole with loss less compression , hemishpere. 
+message queue
+git commands - done
+a 404 page contents. - done
+session storage. - done
+binary search - done
+jwt https://www.section.io/engineering-education/how-to-build-authentication-api-with-jwt-token-in-nodejs/
+

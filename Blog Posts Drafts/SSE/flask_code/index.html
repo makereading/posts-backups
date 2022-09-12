@@ -1,0 +1,17 @@
+<html>
+	<head>
+	<script>
+	var source = new EventSource("http://localhost:5000/events");
+    source.addEventListener('dataUpdate', function(event) {
+        console.log(event);
+    }, false);
+    source.addEventListener('error', function(event) {
+        console.log("Error"+ event)
+        alert("Failed to connect to event stream. Is Redis running?");
+    }, false);
+	</script>
+	</head>
+	<body>
+	SSE TEST
+	</body>
+</html>

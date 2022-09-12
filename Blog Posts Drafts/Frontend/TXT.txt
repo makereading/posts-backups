@@ -1,0 +1,103 @@
+Map vs ForEach
+
+As a part of your day-to-day JavaScript development, you often need to work with arrays. And when you’re working with arrays, you often need to process array elements, so you need a way to loop through each element of an array. In JavaScript, forEach and map are two of the most popular methods to work with arrays. The primary purpose of both these methods is to iterate through arrays. Although they may look almost identical, there are certain differences between them. 
+
+
+
+Map: 
+
+The map method receives a function as a parameter. Then it applies it on each element and returns an entirely new array populated with the results of calling the provided function.
+
+For Each:
+
+the forEach() method receives a function as an argument and executes it once for each array element. However, instead of returning a new array like map, it returns undefined.
+
+
+The first difference between map() and forEach() is the returning value. The forEach() method returns undefined and map() returns a new array with the transformed elements. Even if they do the same job, the returning value remains different.
+
+Differences:
+
+Chaining: 
+
+The second difference between these array methods is the fact that map() is chainable. This means that you can attach reduce(), sort(), filter() and so on after performing a map() method on an array.
+
+That's something you can't do with forEach() because, as you might guess, it returns undefined.
+
+Mutability: 
+
+In general, the word "mutate" means change, alternate, modify or transform. And in the JavaScript world it has the same meaning.
+
+A mutable object is an object whose state can be modified after it is created. So, what about forEach and map regarding mutability?
+
+Well, according to the MDN documentation:
+
+forEach() does not mutate the array on which it is called. (However, callback may do so).
+
+map() does not mutate the array on which it is called (although callback, if invoked, may do so).
+
+Here, we see a very similar definition, and we all know that they both receive a callback as an argument. So, which one relies on immutability?
+
+Well, in my opinion, this definition is not clear though. And to know which does not mutate the original array, we first have to check how these two methods work.
+
+The map() method returns an entirely new array with transformed elements and the same amount of data. In the case of forEach(), even if it returns undefined, it will mutate the original array with the callback.
+
+Therefore, we see clearly that map() relies on immutability and forEach() is a mutator method.
+
+
+Final thoughts:
+
+As always, the choice between map() and forEach() will depend on your use case. If you plan to change, alternate, or use the data, you should pick map(), because it returns a new array with the transformed data.
+
+But, if you won't need the returned array, don't use map() - instead use forEach() or even a for loop.
+
+Hopefully, this post clears up the differences between these two methods. If there are more differences, please share them in the comment section, otherwise thanks for reading it.
+
+
+Difference in table format
+
+	forEach()	map()
+Functionality	Performs given operation on each element of the array	Performs given "transformation" on a "copy" of each element
+Return value	Returns undefined	Returns new array with transformed elements, leaving back original array unchanged.
+Preferrable usage scenario and example	Performing non-tranformation like processing on each element.
+
+For example, saving all elements in the database.	Obtaining array containing output of some processing done on each element of the array.
+
+For example, obtaining array of lengths of each string in the array
+
+
+Performance analysis
+
+const arr = [...Array(100000000).keys()];
+
+console.time("for");
+for (let i = 0; i < arr.length; i++) {}
+console.timeEnd("for");
+
+console.time("while");
+let j = 0;
+while (j < arr.length) {
+  j++;
+}
+console.timeEnd("while");
+
+console.time("dowhile");
+let k = 0;
+do {
+  k++;
+} while (k < arr.length);
+console.timeEnd("dowhile");
+
+console.time("forEach");
+arr.forEach((element) => {});
+console.timeEnd("forEach");
+
+
+
+Just about anything you can do with forEach() you can do with map(), and vise versa.
+map() allocates memory and stores return values. forEach() throws away return values and always returns undefined.
+forEach() will allow a callback function to mutate the current array. map() will instead return a new array.
+
+
+
+
+
